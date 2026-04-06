@@ -11,11 +11,18 @@ Implements a pure software rendering pipeline in C++, including 3D-to-2D perspec
 This project is developed based on the EasyX 2D Graphics Library and Visual Studio 2022.
 
 使用说明
+
 安装 Visual Studio
+
 安装 EasyX 图形库：https://easyx.cn
+
 打开 .sln 解决方案直接编译运行
 
+
 Usage Instructions
-- Install Visual Studio
-- Install the EasyX Graphics Library: https://easyx.cn
-- Open the .sln solution and compile to run directly
+
+Install Visual Studio
+
+Install the EasyX Graphics Library: https://easyx.cn
+
+Open the .sln solution and compile to run directly
