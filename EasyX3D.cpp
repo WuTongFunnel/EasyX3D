@@ -569,7 +569,7 @@ void sky(point& camera_world_position, point& camera_translate, point& camera_vi
 	setlinecolor(RGB(0, 94, 255));
 	int y = horizon_pixel[0].y;
 	if (y > screen_h - 1)y = screen_h - 1;
-	if (y < 0)y = 0;
+	else if (y < 0)y = 0;
 	for (int i = 0; i <y; i++)
 	{
 		float kg = 100.0f / y;
