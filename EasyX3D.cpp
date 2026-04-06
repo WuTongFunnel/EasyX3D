@@ -12,8 +12,8 @@
 using namespace std;
 
 // 你的原始窗口大小变量
-int screen_w = 1280;
-int screen_h = 720;
+int screen_w = 1700;
+int screen_h = 1200;
 // 全屏需要的额外变量
 RECT oldRect;
 bool firstRun = true;
@@ -236,7 +236,7 @@ void camera_init(CameraDelta& delta, point& camera_world_position, point& camera
 
 	//仰角
 	pitch_deg -= delta.dy * k;
-	if (pitch_deg > 90.0f)pitch_deg = 89.9f;
+	if (pitch_deg >89.9f)pitch_deg = 89.9f;
 	if (pitch_deg < -89.9f) pitch_deg = -89.9f;
 	float pitch_rad = deg_to_rad(pitch_deg);
 
@@ -397,7 +397,7 @@ void camera_to_screen(vector<point>& world_camera, vector<point_2d>& pixel, vect
 	{
 		pixel.push_back({});
 		pixel[i].visible = 1;
-		const float r = 1000.0;
+		const float r = 40.0;
 		if (world_camera[i].z >= 0 || ((p[i].x - camera_world_position.x) * (p[i].x - camera_world_position.x) + (p[i].z - camera_world_position.z) * (p[i].z - camera_world_position.z)) >= r * r)
 		{
 			pixel[i].visible = -1;
@@ -567,18 +567,18 @@ void sky(point& camera_world_position, point& camera_translate, point& camera_vi
 	world_to_camera(horizon_world, horizon_camera, camera_translate, camera_vision_z, camera_vision_x, camera_vision_y);
 	camera_to_screen(horizon_camera, horizon_pixel, horizon_world, camera_world_position);
 	setlinecolor(RGB(0, 94, 255));
-	for (int i = 0; i <= horizon_pixel[0].y; i++)
+	int y = horizon_pixel[0].y;
+	if (y > screen_h - 1)y = screen_h - 1;
+	if (y < 0)y = 0;
+	for (int i = 0; i <y; i++)
 	{
-		int y = horizon_pixel[0].y;
-
 		float kg = 100.0f / y;
 		float kr = sin(deg_to_rad(yaw_deg)) * 25 + 25;
 		setlinecolor(RGB(kr, 100 + kg * i, 255));
 		line(0, i, screen_w, i);
 	}
-	for (int i = horizon_pixel[0].y; i <= screen_h-1; i++)
+	for (int i = y; i <= screen_h-1; i++)
 	{
-		int y = horizon_pixel[0].y;
 
 		float kb = 51.0f / (screen_h - 1 - y);
 		float kg = 4.0f/ (screen_h - 1 -y);
@@ -589,7 +589,10 @@ void sky(point& camera_world_position, point& camera_translate, point& camera_vi
 }
 int main()
 {
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 	initgraph(screen_w, screen_h, 0);
+	HWND hwnd = GetHWnd();
+	SetWindowPos(hwnd, NULL, 800, 100, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 	InitWheel();
 	setbkcolor(RGB(0, 204, 204));
 	SetInvisibleCursor();
