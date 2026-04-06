@@ -12,17 +12,17 @@ This project is developed based on the EasyX 2D Graphics Library and Visual Stud
 
 使用说明
 
-安装 Visual Studio
+1.安装 Visual Studio
 
-安装 EasyX 图形库：https://easyx.cn
+2.安装 EasyX 图形库：https://easyx.cn
 
-打开 .sln 解决方案直接编译运行
+3.打开 .sln 解决方案直接编译运行
 
 
 Usage Instructions
 
-Install Visual Studio
+1.Install Visual Studio
 
-Install the EasyX Graphics Library: https://easyx.cn
+2.Install the EasyX Graphics Library: https://easyx.cn
 
-Open the .sln solution and compile to run directly
+3.Open the .sln solution and compile to run directly
