@@ -26,3 +26,4 @@ Usage Instructions
 2.Install the EasyX Graphics Library: https://easyx.cn
 
 3.Open the .sln solution and compile to run directly
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/f7733e94-47b0-458f-a03f-545fea236c3c" />
