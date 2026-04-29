@@ -26,4 +26,11 @@ Usage Instructions
 2.Install the EasyX Graphics Library: https://easyx.cn
 
 3.Open the .sln solution and compile to run directly
+
+介绍视频：
+
+introduction video:
+
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/f7733e94-47b0-458f-a03f-545fea236c3c" />
+
+更新：2.0版本把原来的线框渲染逻辑，改成了顶点着色器和片段着色器逻辑，现在的渲染是以三角形为单位了，可以给三角形上色，但是我没做深度缓冲
