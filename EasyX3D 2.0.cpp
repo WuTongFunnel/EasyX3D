@@ -1,4 +1,4 @@
-//¸ÄÈë¿Úµã
+ï»¿//æ”¹å…¥å£ç‚¹
 #pragma comment(linker, "/subsystem:windows /entry:mainCRTStartup")
 
 #include <vector>
@@ -9,12 +9,14 @@
 #include<string>
 #include<time.h>
 #define PI 3.1415926f
+#define sw 1280
+#define sh 720
 using namespace std;
 
-// ÄãµÄÔ­Ê¼´°¿Ú´óĞ¡±äÁ¿
-int screen_w = 1700;
- int screen_h = 1200;
-// È«ÆÁĞèÒªµÄ¶îÍâ±äÁ¿
+// ä½ çš„åŸå§‹çª—å£å¤§å°å˜é‡
+int screen_w = sw;
+ int screen_h = sh;
+// å…¨å±éœ€è¦çš„é¢å¤–å˜é‡
 RECT oldRect;
 bool firstRun = true;
 
@@ -32,19 +34,19 @@ LRESULT CALLBACK WheelWndProc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
 	if (m == WM_MOUSEWHEEL)
 	{
-		// ¹öÂÖ·½Ïò£ºÉÏ+120 / ÏÂ-120
+		// æ»šè½®æ–¹å‘ï¼šä¸Š+120 / ä¸‹-120
 		short wheelDelta = (short)(w >> 16);
 
 		// ==============================================
-		// ºËĞÄ£ºÃ¿Ò»¸ñ ÓÀÔ¶¹Ì¶¨´óĞ¡£¡ËÙ¶ÈÍêÈ«²»Ó°Ïì£¡
+		// æ ¸å¿ƒï¼šæ¯ä¸€æ ¼ æ°¸è¿œå›ºå®šå¤§å°ï¼é€Ÿåº¦å®Œå…¨ä¸å½±å“ï¼
 		// ==============================================
-		const float FIXED_STEP = 1.0f;  // Ã¿Ò»¸ñ¹Ì¶¨Öµ£¬Äã¿ÉÒÔËæ±ã¸Ä
+		const float FIXED_STEP = 1.0f;  // æ¯ä¸€æ ¼å›ºå®šå€¼ï¼Œä½ å¯ä»¥éšä¾¿æ”¹
 
-		// Ã¿Ò»¸ñ = ¹Ì¶¨Öµ
+		// æ¯ä¸€æ ¼ = å›ºå®šå€¼
 		g_wheelVal += (wheelDelta / 120.0f) * FIXED_STEP*5.0f;
 
-		// ÏÂÃæÕâĞ©¸úËÙ¶ÈÓĞ¹ØµÄ´úÂë È«²¿É¾µô£¡£¡£¡
-		// ÒòÎªÄãÒª Ã¿Ò»¸ñÓÀÔ¶¹Ì¶¨£¡
+		// ä¸‹é¢è¿™äº›è·Ÿé€Ÿåº¦æœ‰å…³çš„ä»£ç  å…¨éƒ¨åˆ æ‰ï¼ï¼ï¼
+		// å› ä¸ºä½ è¦ æ¯ä¸€æ ¼æ°¸è¿œå›ºå®šï¼
 
 		return 0;
 	}
@@ -54,7 +56,7 @@ void InitWheel() {
 	HWND hwnd = GetHWnd();
 	if (hwnd == g_wheelWnd) return;
 
-	// ÖØĞÂ°ó¶¨Ê±£¬ÏÈ»Ö¸´¾É´°¿Ú¹ı³Ì
+	// é‡æ–°ç»‘å®šæ—¶ï¼Œå…ˆæ¢å¤æ—§çª—å£è¿‡ç¨‹
 	if (g_wheelWnd && g_oldWheelProc) {
 		SetWindowLongPtr(g_wheelWnd, GWLP_WNDPROC, (LONG_PTR)g_oldWheelProc);
 	}
@@ -68,12 +70,12 @@ float GetWheelv()
 	g_wheelVal = 0;
 	return val;
 }
-//Òş²ØÊó±ê
+//éšè—é¼ æ ‡
 void SetInvisibleCursor()
 {
 	HWND hwnd = GetHWnd();
 
-	// ´´½¨Ò»¸ö 1x1 ÏñËØµÄÍêÈ«Í¸Ã÷Î»Í¼
+	// åˆ›å»ºä¸€ä¸ª 1x1 åƒç´ çš„å®Œå…¨é€æ˜ä½å›¾
 	BITMAPV5HEADER bmi = { 0 };
 	bmi.bV5Size = sizeof(BITMAPV5HEADER);
 	bmi.bV5Width = 1;
@@ -91,14 +93,14 @@ void SetInvisibleCursor()
 	HBITMAP hBitmap = CreateDIBSection(hdc, (BITMAPINFO*)&bmi, DIB_RGB_COLORS, &pBits, NULL, 0);
 	ReleaseDC(NULL, hdc);
 
-	// Ìî³äÍ¸Ã÷ÏñËØ
+	// å¡«å……é€æ˜åƒç´ 
 	if (pBits)
 	{
 		DWORD* pPixel = (DWORD*)pBits;
-		*pPixel = 0x00000000; // Alpha = 0, ÍêÈ«Í¸Ã÷
+		*pPixel = 0x00000000; // Alpha = 0, å®Œå…¨é€æ˜
 	}
 
-	// ´´½¨Í¼±ê¹â±ê
+	// åˆ›å»ºå›¾æ ‡å…‰æ ‡
 	ICONINFO ii = { 0 };
 	ii.fIcon = FALSE;
 	ii.xHotspot = 0;
@@ -108,15 +110,15 @@ void SetInvisibleCursor()
 
 	HCURSOR hInvCur = CreateIconIndirect(&ii);
 
-	// Ó¦ÓÃµ½´°¿Ú
+	// åº”ç”¨åˆ°çª—å£
 	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hInvCur);
 	SetCursor(hInvCur);
 	ShowCursor(FALSE);
 
-	// ÇåÀí×ÊÔ´
+	// æ¸…ç†èµ„æº
 	DeleteObject(hBitmap);
 }
-// È«ÆÁÇĞ»»º¯Êı F11
+// å…¨å±åˆ‡æ¢å‡½æ•° F11
 void ToggleFullScreen()
 {
 	static bool isFullScreen = false;
@@ -126,7 +128,7 @@ void ToggleFullScreen()
 
 	if (!isFullScreen)
 	{
-		// 1. ±£´æÔ­´°¿ÚĞÅÏ¢
+		// 1. ä¿å­˜åŸçª—å£ä¿¡æ¯
 		HWND hwnd = GetHWnd();
 		savedStyle = GetWindowLongPtr(hwnd, GWL_STYLE);
 		GetWindowRect(hwnd, &oldRect);
@@ -135,24 +137,24 @@ void ToggleFullScreen()
 		saved_w = screen_w;
 		saved_h = screen_h;
 
-		// 2. »ñÈ¡ÆÁÄ»ÕæÊµ·Ö±æÂÊ
+		// 2. è·å–å±å¹•çœŸå®åˆ†è¾¨ç‡
 		int cx = GetSystemMetrics(SM_CXSCREEN);
 		int cy = GetSystemMetrics(SM_CYSCREEN);
 
-		// 3. ¹Ø¾É´°¿Ú£¬¿ªĞÂÈ«ÆÁ´°¿Ú
+		// 3. å…³æ—§çª—å£ï¼Œå¼€æ–°å…¨å±çª—å£
 		closegraph();
 		initgraph(cx, cy, 0);
 		setbkcolor(RGB(0, 204, 204));
 
-		//Òş²ØÊó±ê
+		//éšè—é¼ æ ‡
 		SetInvisibleCursor();
 
-		// 4. Ç¿ÖÆÉèÖÃÎªÎŞ±ß¿òÖÃ¶¥È«ÆÁ
+		// 4. å¼ºåˆ¶è®¾ç½®ä¸ºæ— è¾¹æ¡†ç½®é¡¶å…¨å±
 		hwnd = GetHWnd();
 		SetWindowLongPtr(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, cx, cy, SWP_SHOWWINDOW);
 
-		// 5. ¸üĞÂ±äÁ¿
+		// 5. æ›´æ–°å˜é‡
 		screen_w = cx;
 		screen_h = cy;
 		InitWheel();
@@ -160,22 +162,22 @@ void ToggleFullScreen()
 	}
 	else
 	{
-		// 1. ¹ØÈ«ÆÁ´°¿Ú
+		// 1. å…³å…¨å±çª—å£
 		closegraph();
 
-		// 2. »Ö¸´Ô­´°¿Ú´óĞ¡
+		// 2. æ¢å¤åŸçª—å£å¤§å°
 		initgraph(saved_w, saved_h, 0);
 		setbkcolor(RGB(0, 204, 204));
 
-		//Òş²ØÊó±ê
+		//éšè—é¼ æ ‡
 		SetInvisibleCursor();
 
-		// 3. »Ö¸´´°¿ÚÑùÊ½ºÍÎ»ÖÃ
+		// 3. æ¢å¤çª—å£æ ·å¼å’Œä½ç½®
 		HWND hwnd = GetHWnd();
 		SetWindowLongPtr(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
 		SetWindowPos(hwnd, HWND_TOP, saved_x, saved_y, saved_w, saved_h, SWP_SHOWWINDOW);
 
-		// 4. »Ö¸´ÄãµÄ±äÁ¿
+		// 4. æ¢å¤ä½ çš„å˜é‡
 		screen_w = saved_w;
 		screen_h = saved_h;
 		InitWheel();
@@ -222,74 +224,79 @@ struct point
 	float z;
 	float l;
 };
+
 struct point_2d
 {
 	int x;
 	int y;
 	bool visible;
+	float depth;
 };
+float M_vp[4][4];
+float fov_deg = 60.0f;
 float pitch_deg = 0.0f;
 float yaw_deg = 0.0f;
+const float n = 0.1f, f = 100.0f;
 void camera_init(CameraDelta& delta, point& camera_world_position, point& camera_translate, point& camera_vision, point& camera_vision_z, point& camera_vision_x, point& camera_vision_y)
 {
-	const float k = 0.1f;//×ª¶¯ÁéÃô¶È
+	const float k = 0.1f;//è½¬åŠ¨çµæ•åº¦
 
-	//Ñö½Ç
+	//ä»°è§’
 	pitch_deg -= delta.dy * k;
 	if (pitch_deg >89.9f)pitch_deg = 89.9f;
 	if (pitch_deg < -89.9f) pitch_deg = -89.9f;
 	float pitch_rad = deg_to_rad(pitch_deg);
 
-	//Æ«º½½Ç
+	//åèˆªè§’
 	yaw_deg += delta.dx * k;
 	if (yaw_deg >= 360.0f)yaw_deg -= 360;
 	if (yaw_deg < 0.0f)yaw_deg += 360;
 	float yaw_rad = deg_to_rad(yaw_deg);
 
-	//¼ÆËãÏà»úÏòÁ¿
+	//è®¡ç®—ç›¸æœºå‘é‡
 	camera_vision.x = cos(pitch_rad) * sin(yaw_rad);
 	camera_vision.y = sin(pitch_rad);
 	camera_vision.z = cos(pitch_rad) * cos(yaw_rad);
 	camera_vision.l = 1;
 
-	//ÇóÏà»ú×ø±êÏµzÖá
+	//æ±‚ç›¸æœºåæ ‡ç³»zè½´
 	camera_vision_z.x = -camera_vision.x;
 	camera_vision_z.y = -camera_vision.y;
 	camera_vision_z.z = -camera_vision.z;
 	camera_vision_z.l = sqrt(camera_vision_z.x * camera_vision_z.x + camera_vision_z.y * camera_vision_z.y + camera_vision_z.z * camera_vision_z.z);
 
 
-	//¹éÒ»»¯Ïà»ú×ø±êÏµzÖá
+	//å½’ä¸€åŒ–ç›¸æœºåæ ‡ç³»zè½´
 	camera_vision_z.x /= camera_vision_z.l;
 	camera_vision_z.y /= camera_vision_z.l;
 	camera_vision_z.z /= camera_vision_z.l;
 
-	//ÇóÏà»ú×ø±êÏµxÖá
+	//æ±‚ç›¸æœºåæ ‡ç³»xè½´
 	camera_vision_x.x = camera_vision.z;
 	camera_vision_x.y = 0;
 	camera_vision_x.z = -camera_vision.x;
 	camera_vision_x.l = sqrt(camera_vision_x.x * camera_vision_x.x + camera_vision_x.y * camera_vision_x.y + camera_vision_x.z * camera_vision_x.z);
 
-	//¹éÒ»»¯Ïà»ú×ø±êÏµxÖá
+	//å½’ä¸€åŒ–ç›¸æœºåæ ‡ç³»xè½´
 	camera_vision_x.x /= camera_vision_x.l;
 	camera_vision_x.y /= camera_vision_x.l;
 	camera_vision_x.z /= camera_vision_x.l;
 
-	//ÇóÏà»ú×ø±êÏµyÖá
+	//æ±‚ç›¸æœºåæ ‡ç³»yè½´
 	camera_vision_y.x = -camera_vision.x * camera_vision.y;
 	camera_vision_y.y = camera_vision.x * camera_vision.x + camera_vision.z * camera_vision.z;
 	camera_vision_y.z = -camera_vision.y * camera_vision.z;
 	camera_vision_y.l = sqrt(camera_vision_y.x * camera_vision_y.x + camera_vision_y.y * camera_vision_y.y + camera_vision_y.z * camera_vision_y.z);
 
-	//¹éÒ»»¯Ïà»ú×ø±êÏµyÖá
+	//å½’ä¸€åŒ–ç›¸æœºåæ ‡ç³»yè½´
 	camera_vision_y.x /= camera_vision_y.l;
 	camera_vision_y.y /= camera_vision_y.l;
 	camera_vision_y.z /= camera_vision_y.l;
 
-	// ¼üÅÌÒÆ¶¯¹¦ÄÜ
+	// é”®ç›˜ç§»åŠ¨åŠŸèƒ½
 	const float u = 0.1f;
-	float v = u; //¼üÅÌÁéÃô¶È
-	//°´CTRL¼ÓËÙ
+	float v = u; //é”®ç›˜çµæ•åº¦
+	//æŒ‰CTRLåŠ é€Ÿ
 	if (GetAsyncKeyState(VK_CONTROL) & 0x8000)
 	{
 		v = (2.0f) * u;
@@ -301,55 +308,78 @@ void camera_init(CameraDelta& delta, point& camera_world_position, point& camera
 	float rl = sqrt(camera_vision_x.x * camera_vision_x.x + camera_vision_x.z * camera_vision_x.z);
 	float r_move_x = camera_vision_x.x / rl;
 	float r_move_z = camera_vision_x.z / rl;
-	//W:½ø
+	//W:è¿›
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
 		camera_world_position.x += (f_move_x * v);
 		camera_world_position.z += (f_move_z * v);
 	}
 
-	// A:×óÒÆ
+	// A:å·¦ç§»
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
 		camera_world_position.x -= (r_move_x * v);
 		camera_world_position.z -= (r_move_z * v);
 	}
 
-	// S:ºóÍË
+	// S:åé€€
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
 		camera_world_position.x -= (f_move_x * v);
 		camera_world_position.z -= (f_move_z * v);
 	}
-	// D:ÓÒÒÆ
+	// D:å³ç§»
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
 		camera_world_position.x += (r_move_x * v);
 		camera_world_position.z += (r_move_z * v);
 	}
-	// ¿Õ¸ñ:ÉÏÉı
+	// ç©ºæ ¼:ä¸Šå‡
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		camera_world_position.y += v;
 	}
 
-	// Shift:ÏÂ½µ
+	// Shift:ä¸‹é™
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 	{
 		camera_world_position.y -= v;
 	}
-	// ESC:ÍË³ö
+	// ESC:é€€å‡º
 	if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
 	{
-		exit(0); // ¹Ø±Õ³ÌĞò
+		exit(0); // å…³é—­ç¨‹åº
 	}
-	//¼ÆËãÆ½ÒÆÁ¿
+	//è®¡ç®—å¹³ç§»é‡
 	camera_translate.x = camera_vision_x.x * camera_world_position.x + camera_vision_x.y * camera_world_position.y + camera_vision_x.z * camera_world_position.z;
 	camera_translate.y = camera_vision_y.x * camera_world_position.x + camera_vision_y.y * camera_world_position.y + camera_vision_y.z * camera_world_position.z;
 	camera_translate.z = camera_vision_z.x * camera_world_position.x + camera_vision_z.y * camera_world_position.y + camera_vision_z.z * camera_world_position.z;
+	float fov_rad = deg_to_rad(fov_deg);
+	float plane_y = n * tan(0.5f * fov_rad);
+	float aspect = (float)screen_w / screen_h;
+	float plane_x = aspect * plane_y;
+	float M_v[4][4] = { camera_vision_x.x, camera_vision_x.y, camera_vision_x.z,-camera_translate.x,
+					   camera_vision_y.x, camera_vision_y.y, camera_vision_y.z,-camera_translate.y,
+					   camera_vision_z.x, camera_vision_z.y, camera_vision_z.z,-camera_translate.z,
+					   0 ,                0,                  0,                1 };
+	float M_p[4][4] = { n * screen_w / (2 * plane_x),0,-screen_w / 2,                          0,
+					   0,                     -(screen_h * n) / (2 * plane_y),-screen_h / 2 ,0,
+					   0,                     0,n + f,                                    -n * f,
+					   0,                     0, -1,                                           0, };
+	for (int i = 0; i <= 3; i++)
+	{
+		for (int j = 0; j <= 3; j++)
+		{
+			M_vp[i][j] = 0;
+			for (int k = 0; k <= 3; k++)
+			{
+				M_vp[i][j] += (M_p[i][k] * M_v[k][j]);
+			}
+		}
+	}
 }
-float fov_deg = 60.0f;
 bool turn(point& camera_world_position)
+//çœ‹ç”»é¢æœ‰æ²¡æœ‰å˜åŒ–
 {
 	static float prev_yaw = -361, prev_pitch = 91, x = -1, y = -1, z = -1,pre_fov=-1;
 	if (prev_yaw != yaw_deg || prev_pitch != pitch_deg || x != camera_world_position.x || y != camera_world_position.y || z != camera_world_position.z||pre_fov!=fov_deg)
@@ -360,55 +390,38 @@ bool turn(point& camera_world_position)
 	return 0;
 }
 
-void world_to_camera(point point_world, point& point_camera, point& camera_translate, point& camera_vision_z, point& camera_vision_x, point& camera_vision_y)
-{
-	point translate_p;
-	translate_p.x = camera_vision_x.x * point_world.x + camera_vision_x.y * point_world.y + camera_vision_x.z * point_world.z;
-	translate_p.y = camera_vision_y.x * point_world.x + camera_vision_y.y * point_world.y + camera_vision_y.z * point_world.z;
-	translate_p.z = camera_vision_z.x * point_world.x + camera_vision_z.y * point_world.y + camera_vision_z.z * point_world.z;
-
-	point_camera.x = translate_p.x - camera_translate.x;
-	point_camera.y = translate_p.y - camera_translate.y;
-	point_camera.z = translate_p.z - camera_translate.z;
-}
 int scale = 25;
 string text_num(string text, float a)
 {
-	settextstyle(scale, 0, "Î¢ÈíÑÅºÚ");
+	settextstyle(scale, 0, "å¾®è½¯é›…é»‘");
 	string s = text + to_string(a);
 	return s;
 }
-//Ïà»ú×ªÆÁÄ»
-void camera_to_screen(point& point_camera, point_2d & point_pixel, point& point_world, point& camera_world_position)
+void world_to_screen(point& point_world, point_2d& point_pixel)
 {
-	float aspect = (float)screen_w / screen_h;
-	float fov_rad = deg_to_rad(fov_deg);
-	float d = 1.0f;
-	float plane_y = tan(0.5 * fov_rad) * d;
-	float plane_x = aspect * plane_y;
+	float M_point_world[4] = { point_world.x,point_world.y,point_world.z,1 };
 
+	float M_point_screen[4];
+	for (int i = 0; i <= 3; i++)
+	{
+		M_point_screen[i] = 0;
+		for (int j = 0; j <= 3; j++)
+		{
+			M_point_screen[i] += (M_vp[i][j] * M_point_world[j]);
+		}
+	}
 	point_pixel.visible = 1;
-	const float r = 40.0;
-	if (point_camera.z >= 0 || ((point_camera.x - camera_world_position.x) * (point_camera.x - camera_world_position.x) + (point_camera.z - camera_world_position.z) * (point_camera.z - camera_world_position.z)) >= r * r)
-	{
-		point_pixel.visible = 0;
-		return;
-	}
-	float nx = point_camera.x / (-point_camera.z);
-	float ny = point_camera.y / (-point_camera.z);
-	if (nx > plane_x || nx < -plane_x || ny > plane_y || ny < -plane_y)
-	{
-		point_pixel.visible = 1;
-	}
-	point_pixel.x = round((nx + plane_x) / (2 * plane_x) * screen_w);
-	point_pixel.y = round((1 - (ny / plane_y)) * screen_h * 0.5);
-}
-void world_to_screen(point &point_world, point_2d &point_pixel, point& camera_translate, point& camera_vision_z, point& camera_vision_x, point& camera_vision_y, point& camera_world_position)
-{
-	point point_camera;
+	point_pixel.x = M_point_screen[0] / M_point_screen[3];
+	point_pixel.y = M_point_screen[1] / M_point_screen[3];
+	point_pixel.depth = M_point_screen[2] / M_point_screen[3];
+	if (M_point_screen[3] < n || M_point_screen[3] > f)point_pixel.visible = 0;
+	/*if (point_pixel.x < 0)point_pixel.visible |= 1 << 1;
+	else if (point_pixel.x > screen_w)point_pixel.visible |= 1 << 2;
+	if (point_pixel.y < 0)point_pixel.visible |= 1 << 2;
+	else if (point_pixel.y > screen_h)point_pixel.visible |= 1 << 4;*/
 
-	world_to_camera(point_world, point_camera, camera_translate, camera_vision_z, camera_vision_x, camera_vision_y);
-	camera_to_screen(point_camera, point_pixel, point_world, camera_world_position);
+
+
 }
 struct color
 {
@@ -419,9 +432,9 @@ struct color
 struct screen
 {
 	color rgb;
-	//ºóÃæ¿ÉÄÜĞ´Éî¶È;
+	float depth;
 };
-screen screenxy[10000][10000];
+screen screen_buffer[3000][3000];
 struct triangle
 {
 	point point_world[3];
@@ -439,36 +452,135 @@ point_2d sub_2d(point_2d a, point_2d b)
 	return r;
 }
 
-
-void draw_triangle(point_2d point_screen[3], color c)
+void draw_triangle(point_2d point_screen[3], color cl,float coso)
 {
-	POINT pts[3];
-	pts[0].x = point_screen[0].x;
-	pts[0].y = point_screen[0].y;
-	pts[1].x = point_screen[1].x;
-	pts[1].y = point_screen[1].y;
-	pts[2].x = point_screen[2].x;
-	pts[2].y = point_screen[2].y;
-	setfillcolor(RGB(c.r, c.g, c.b));
-	solidpolygon(pts, 3);
-	setlinecolor(BLACK);
-	line(point_screen[0].x, point_screen[0].y, point_screen[1].x, point_screen[1].y);
-	line(point_screen[1].x, point_screen[1].y, point_screen[2].x, point_screen[2].y);
-	line(point_screen[2].x, point_screen[2].y, point_screen[0].x, point_screen[0].y);
-}
-void triangle_to_screen(triangle triangle_world, point& camera_translate, point& camera_vision_z, point& camera_vision_x, point& camera_vision_y, point& camera_world_position)
-{
-	memset(screenxy, 0, sizeof(screenxy));
-	point_2d point_screen[3];
-	for(int i=0;i<=2;i++)world_to_screen(triangle_world.point_world[i], point_screen[i], camera_translate, camera_vision_z, camera_vision_x, camera_vision_y, camera_world_position);
-	setlinecolor(BLACK);
+	color fog = { 255,255,255 };
+	float alpha = 0, fogbegin = n, fogend = 20, fog_density = 0.6;
+	float fov_rad = deg_to_rad(fov_deg);
+	float plane_y = n * tan(0.5f * fov_rad);
+	float aspect = (float)screen_w / screen_h;
+	float plane_x = aspect * plane_y;
+	int miny = screen_h, maxy = -1, minx = screen_w, maxx = -1;
+	//æ‰«æçº¿ç®—æ³•
 	for (int i = 0; i <= 2; i++)
 	{
-		if (!(point_screen[i].visible))return;
+		miny = min(miny, point_screen[i].y);
+		maxy = max(maxy, point_screen[i].y);
+		minx = min(minx, point_screen[i].x);
+		maxx = max(maxx, point_screen[i].x);
 	}
-	draw_triangle(point_screen, triangle_world.rgb);
+	float Mx[2][2];
+	{
+		float a = point_screen[0].x - point_screen[2].x;
+		float b = point_screen[1].x - point_screen[2].x;
+		float c = point_screen[0].y - point_screen[2].y;
+		float d = point_screen[1].y- point_screen[2].y;
+		float D = a * d - b * c;
+
+		if (fabs(D) < 1e-6) return;
+
+		Mx[0][0] = d / D;
+		Mx[0][1] = -b / D;
+		Mx[1][0] = -c / D;
+		Mx[1][1] = a / D;
+	}
+	float M_inv[4][4] = {
+				2 * plane_x / (n * screen_w),  0,                        0,         -plane_x / n  ,
+				0,                      -2 * plane_y / (n * screen_h),   0,          plane_y / n   ,
+				 0,                       0,                        0,         -1           ,
+				 0,                       0,                       -1.0f / (n * f), -(n + f) / (n * f)
+	};
+	float naddf = n + f,nf=n*f;
+	miny = max(0, miny), maxy = min(screen_h - 1, maxy), minx = max(0, minx), maxx = min(screen_w - 1, maxx);
+	for (int y= miny; y<=maxy; y++)
+	{
+		for (int x = minx; x <= maxx; x++)
+		{
+			float pixel_depth=1000;
+			{
+				float m, n, q;
+				float dx = x - point_screen[2].x;
+				float dy = y - point_screen[2].y;
+				m = Mx[0][0] * dx + Mx[0][1] * dy;
+				n= Mx[1][0] * dx + Mx[1][1] * dy;
+				q = 1 - m - n;
+				if (m < 0 || n < 0 || q < 0)continue;
+				pixel_depth = m * point_screen[0].depth + n * point_screen[1].depth + q * point_screen[2].depth;
+				if (pixel_depth < screen_buffer[y][x].depth)
+				{
+					float w = -(nf /( naddf +pixel_depth));
+
+					float p_screen[4] = { w * x,w * y,w * pixel_depth,w };
+	float p_camera[3];
+					for (int i = 0; i <= 2; i++)
+					{
+						p_camera[i] = 0;
+						for (int j = 0; j <= 3; j++)
+						{
+							p_camera[i] += (M_inv[i][j] * p_screen[j]);
+						}
+					}
+					float l= sqrt(p_camera[0] * p_camera[0] + p_camera[1] * p_camera[1] + p_camera[2] * p_camera[2]);
+					alpha =l / (fogend-fogbegin);
+					if (alpha > 1)alpha = 1;
+					if (alpha < 0)alpha = 0;
+					alpha *= fog_density;
+					float invalpha = 1 - alpha;
+					color res = { round(fog.r * alpha + cl.r * invalpha),round(fog.g * alpha + cl.g * invalpha),round(fog.b * alpha + cl.b * invalpha) };
+					screen_buffer[y][x].rgb = res;
+					screen_buffer[y][x].depth = pixel_depth;
+				}
+			}
+		}
+	}
 }
-//»æÖÆ¹â±ê
+void triangle_to_screen(triangle triangle_world)
+{
+	point noraml_camera;
+	// å•ä½æ³•å‘é‡
+	point p0 = triangle_world.point_world[0];
+	point p1 = triangle_world.point_world[1];
+	point p2 = triangle_world.point_world[2];
+
+	// è¾¹å‘é‡
+	float e1x = p1.x - p0.x;
+	float e1y = p1.y - p0.y;
+	float e1z = p1.z - p0.z;
+
+	float e2x = p2.x - p0.x;
+	float e2y = p2.y - p0.y;
+	float e2z = p2.z - p0.z;
+
+	// å‰ä¹˜ â†’ æ³•å‘é‡
+	float nx = e1y * e2z - e1z * e2y;
+	float ny = e1z * e2x - e1x * e2z;
+	float nz = e1x * e2y - e1y * e2x;
+
+	// å½’ä¸€åŒ– 
+	float len = sqrt(nx * nx + ny * ny + nz * nz);
+	if (len < 1e-6f) len = 1.0f;
+	nx /= len;
+	ny /= len;
+	nz /= len;
+	//ç›¸æœºå¯¹ç‰©ä½“çš„ç®€å•å…‰ç…§
+	point l = { 1 / sqrt(3),1 / sqrt(3) ,1 / sqrt(3) };
+	float coso = nx * l.x + ny*l.y +nz * l.z;
+	coso = fabs(coso);
+	color c;
+	c.r = round(triangle_world.rgb.r * coso);
+	c.g = round(triangle_world.rgb.g * coso);
+	c.b = round(triangle_world.rgb.b * coso);
+	if (c.r < 0)c.r = 0;
+	if (c.g < 0)c.g = 0;
+	if (c.b < 0)c.b = 0;
+	point_2d point_screen[3];
+	for (int i = 0; i <= 2; i++)world_to_screen(triangle_world.point_world[i], point_screen[i]);
+	if (!point_screen[0].visible || !point_screen[1].visible|| !point_screen[2].visible)return;
+	setlinecolor(BLACK);
+
+	draw_triangle(point_screen, c,coso);
+}
+//ç»˜åˆ¶å…‰æ ‡
 void draw_sign()
 {
 	setlinecolor(BLACK);
@@ -480,8 +592,8 @@ void draw_sign()
 	line(cx, cy, cx - l, cy);
 	line(cx, cy, cx, cy - l);
 }
-//»æÖÆÌì¿Õ
-void sky(point& camera_world_position, point& camera_translate, point& camera_vision, point& camera_vision_z, point& camera_vision_x, point& camera_vision_y)
+//ç»˜åˆ¶å¤©ç©º
+void sky(point& camera_world_position, point& camera_vision)
 {
 	static point horizon_world;
 	static point_2d horizon_pixel;
@@ -489,38 +601,139 @@ void sky(point& camera_world_position, point& camera_translate, point& camera_vi
 	horizon_world.x += camera_world_position.x;
 	horizon_world.y = camera_world_position.y;
 	horizon_world.z += camera_world_position.z;
-	world_to_screen(horizon_world, horizon_pixel, camera_translate, camera_vision_z, camera_vision_x, camera_vision_y, camera_world_position);
-	setlinecolor(RGB(0, 94, 255));
+	world_to_screen(horizon_world, horizon_pixel);
 	int y = horizon_pixel.y;
+	horizon_pixel.depth = f;
 	if (y > screen_h - 1)y = screen_h - 1;
 	else if (y < 0)y = 0;
+	float kr = sin(deg_to_rad(yaw_deg)) * 25 + 25;
+	color skyfog = { 255,255,255 };
+   float skyfog_density = 0.3;
 	for (int i = 0; i <y; i++)
 	{
 		float kg = 100.0f / y;
-		float kr = sin(deg_to_rad(yaw_deg)) * 25 + 25;
-		setlinecolor(RGB(kr, 100 + kg * i, 255));
-		line(0, i, screen_w, i);
+		color c = { kr, 100 +kg * i, 255 };
+		color res = { round(c.r * (1 - skyfog_density) + skyfog.r * skyfog_density),round(c.g * (1 - skyfog_density) + skyfog.g * skyfog_density),round(c.b * (1 - skyfog_density) + skyfog.b * skyfog_density) };
+		for (int j = 0; j <= screen_w - 1; j++)
+		{
+			screen* p = &screen_buffer[i][j];
+			p->rgb = res;
+			p->depth = horizon_pixel.depth;
+		}
 	}
 	for (int i = y; i <= screen_h-1; i++)
 	{
 
 		float kb = 51.0f / (screen_h - 1 - y);
 		float kg = 4.0f/ (screen_h - 1 -y);
-		float kr = sin(deg_to_rad(yaw_deg)) * 25 + 25;
-		setlinecolor(RGB(kr, 200 + kg * (i - y), 255 - kb* (i - y)));
-		line(0, i, screen_w, i);
+		color c={ kr, 200 + kg * (i - y), 255 - kb * (i - y) };
+		color res = { round(c.r * (1 - skyfog_density) + skyfog.r * skyfog_density),round(c.g * (1 - skyfog_density) + skyfog.g * skyfog_density),round(c.b * (1 - skyfog_density) + skyfog.b* skyfog_density) };
+		for (int j = 0; j <= screen_w - 1; j++)
+		{
+			screen* p = &screen_buffer[i][j];
+			p->rgb = res;
+			p->depth = horizon_pixel.depth;
+		}
 	}
 }
-void draw()
+void draw1()
 {
+	// è·å–æ˜¾å­˜æŒ‡é’ˆ
+	DWORD* pBuffer = GetImageBuffer();
+	if (!pBuffer) return;
+	int cnt=1;
+	// ç›´æ¥å†™æ˜¾å­˜ï¼Œæ¯” putpixel å¿« 50 å€
 	for (int y = 0; y < screen_h; y++)
 	{
 		for (int x = 0; x < screen_w; x++)
 		{
-			color c = screenxy[y][x].rgb;
-			if(c.r!=0||c.g!=0||c.b!=0)putpixel(x, y, RGB(c.r, c.g, c.b));
+			color t;
+			t.r = 0, t.g = 0, t.b = 0;
+			int time=0;
+			for (int i = -cnt; i <= cnt; i++)
+			{
+				for (int j = -cnt; j <= cnt; j++)
+				{
+					int tx = x + i;
+					int ty = y + j;
+					if (tx < screen_w && ty < screen_h&& tx >-1 && ty >-1)
+					{
+						time++;
+						t.r += screen_buffer[ty][tx].rgb.r;
+						t.g += screen_buffer[ty][tx].rgb.g;
+						t.b += screen_buffer[ty][tx].rgb.b;
+					}
+				}
+			}
+			t.r = round((1.0f * t.r) / time);
+			t.g= round((1.0f * t.g) / time);
+			t.b = round((1.0f * t.b) / time);
+			color& c = t;
+			pBuffer[y * screen_w + x] = (c.r << 16) | (c.g << 8) | c.b;
 		}
 	}
+}
+void draw_edge()
+{
+	// è·å–æ˜¾å­˜æŒ‡é’ˆ
+	DWORD* pBuffer = GetImageBuffer();
+	if (!pBuffer) return;
+	int cnt = 1;
+	// ç›´æ¥å†™æ˜¾å­˜ï¼Œæ¯” putpixel å¿« 50 å€
+	for (int y = 0; y < screen_h; y++)
+	{
+		for (int x = 0; x < screen_w; x++)
+		{
+			float t=0;
+			int time = 0;
+			for (int i = -cnt; i <= cnt; i++)
+			{
+				for (int j = -cnt; j <= cnt; j++)
+				{
+					int tx = x + i;
+					int ty = y + j;
+					if (tx < screen_w && ty < screen_h && tx >-1 && ty >-1)
+					{
+						time++;
+						float dr=screen_buffer[ty][tx].rgb.r-screen_buffer[y][x].rgb.r;
+						float dg = screen_buffer[ty][tx].rgb.g - screen_buffer[y][x].rgb.g;
+						float db= screen_buffer[ty][tx].rgb.b - screen_buffer[y][x].rgb.b;
+						float l = 255*sqrt(dr * dr + dg * dg + db * db) /sqrt(195075.0f);
+						t +=l;
+					}
+				}
+			}
+			t= t/ time;
+			color c;
+				float alpha =t / 255;
+				c.r =(1-alpha)* screen_buffer[y][x].rgb.r;
+				c.g = (1 - alpha) * screen_buffer[y][x].rgb.g;
+				c.b = (1 - alpha) * screen_buffer[y][x].rgb.b;
+			pBuffer[y * screen_w + x] = (c.r << 16) | (c.g << 8) | c.b;
+		}
+	}
+
+	
+
+}
+void clear_screen()
+{
+	
+		// éå†æ•´ä¸ªå±å¹•
+		for (int y = 0; y < screen_h; y++)
+		{
+			for (int x = 0; x < screen_w; x++)
+			{
+				// æ¸…ç©ºé¢œè‰²ï¼šé»‘è‰²ï¼ˆä½ ä¹Ÿå¯ä»¥æ”¹æˆå¤©ç©ºè‰²ï¼‰
+				screen_buffer[y][x].rgb.r = 0;
+				screen_buffer[y][x].rgb.g = 0;
+				screen_buffer[y][x].rgb.b = 0;
+
+				// æ¸…ç©ºæ·±åº¦ï¼šè®¾ä¸ºæœ€è¿œè·ç¦»ï¼ˆä¿è¯æ–°åƒç´ èƒ½æ­£å¸¸æ·±åº¦æµ‹è¯•ï¼‰
+				screen_buffer[y][x].depth = f;
+			}
+		}
+	
 }
 int main()
 {
@@ -541,7 +754,7 @@ int main()
 	float fps;
 	while (1)
 	{
-		// F11 È«ÆÁÇĞ»»
+		// F11 å…¨å±åˆ‡æ¢
 		if (GetAsyncKeyState(VK_F11) & 1)
 		{
 			ToggleFullScreen();
@@ -558,15 +771,27 @@ int main()
 		BeginBatchDraw();
 		cleardevice();
 	setbkcolor(RGB(0, 204, 204));
-sky(camera_world_position, camera_translate, camera_vision, camera_vision_z, camera_vision_x, camera_vision_y);
+	sky(camera_world_position,camera_vision);
 triangle tri;
 tri.point_world[0] = { 0,   0, 0 };
 tri.point_world[1] = { 0, 10, 0 };
 tri.point_world[2] = { 10,  0,0  };
-tri.rgb = { 255, 0, 0 }; // ºìÉ«
-triangle_to_screen(tri, camera_translate, camera_vision_z, camera_vision_x, camera_vision_y, camera_world_position);
-draw();
-		//»æÖÆ¹â±ê 
+tri.rgb = {250,250,250}; 
+triangle tri2;
+tri2.point_world[0] = { 10,   10, 10 };
+tri2.point_world[1] = { 0, 10, 0 };
+tri2.point_world[2] = { 0, 14, 0 };
+tri2.rgb = { 250,0,250 };
+triangle tri3;
+tri3.point_world[0] = { 10,   10, 10 };
+tri3.point_world[1] = { 10, 20, 0 };
+tri3.point_world[2] = { 10,  0,-10 };
+tri3.rgb = { 250,250,0 };
+triangle_to_screen(tri);
+triangle_to_screen(tri2);
+triangle_to_screen(tri3);
+draw1();
+		//ç»˜åˆ¶å…‰æ ‡ 
 		draw_sign();
 		//fov
 		{
@@ -574,13 +799,13 @@ draw();
 			setbkmode(TRANSPARENT);
 			outtextxy(0, screen_h-100, s.c_str());
 		}
-		//Ñö½Ç
+		//ä»°è§’
 		{
 			string s = text_num("pitch:", pitch_deg);
 			setbkmode(TRANSPARENT);
 			outtextxy(0, 0, s.c_str());
 		}
-		//Æ«½Ç
+		//åè§’
 		{
 			string s = text_num("yaw:", yaw_deg);
 			setbkmode(TRANSPARENT);
