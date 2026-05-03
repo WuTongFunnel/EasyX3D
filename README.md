@@ -34,3 +34,6 @@ introduction video:
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/f7733e94-47b0-458f-a03f-545fea236c3c" />
 
 更新：2.0版本把原来的线框渲染逻辑，改成了顶点着色器和片段着色器逻辑，现在的渲染是以三角形为单位了，可以给三角形上色，同时做了深度缓冲，雾气渲染
+
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/2f525c2c-1339-409f-b87a-57a9184d4afe" />
+
