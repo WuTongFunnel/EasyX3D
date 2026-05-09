@@ -27,13 +27,14 @@ Usage Instructions
 
 3.Open the .sln solution and compile to run directly
 
-介绍视频：
+介绍视频：https://www.bilibili.com/video/BV1F1R9B9Ess/?vd_source=13eb445c45973d50b70c8f302837f2d7#reply298933391617
 
-introduction video:
+introduction video:https://www.bilibili.com/video/BV1F1R9B9Ess/?vd_source=13eb445c45973d50b70c8f302837f2d7#reply298933391617
 
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/f7733e94-47b0-458f-a03f-545fea236c3c" />
 
-更新：2.0版本把原来的线框渲染逻辑，改成了顶点着色器和片段着色器逻辑，现在的渲染是以三角形为单位了，可以给三角形上色，同时做了深度缓冲，雾气渲染
+更新：0.2版本把原来的线框渲染逻辑，改成了顶点着色器和片段着色器逻辑，现在的渲染是以三角形为单位了，可以给三角形上色，同时做了深度缓冲，雾气渲染
 
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/2f525c2c-1339-409f-b87a-57a9184d4afe" />
-
+1.0更新：更新给三角形上纹理贴图，近裁面裁剪。暂时就做到这里了
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/253dfdeb-7029-4323-bec4-a1723cac3685" />
